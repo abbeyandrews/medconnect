@@ -1,4 +1,18 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+/**
+ * Where the API lives.
+ *
+ * Every route is mounted under /api, so the configured value has to end there.
+ * Setting NEXT_PUBLIC_API_URL to the bare host is the obvious mistake to make
+ * and produces a site that loads and then 404s on every request, so the suffix
+ * is added when it is missing and a trailing slash is trimmed.
+ */
+function resolveApiUrl() {
+  const configured = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api').trim();
+  const base = configured.replace(/\/+$/, '');
+  return /\/api$/.test(base) ? base : `${base}/api`;
+}
+
+const API_URL = resolveApiUrl();
 
 const TOKEN_KEY = 'mc_token';
 const USER_KEY = 'mc_user';
