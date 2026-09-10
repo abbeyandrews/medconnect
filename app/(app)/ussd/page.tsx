@@ -284,7 +284,7 @@ Content-Type: application/json
 
 {
   "sessionId":   "ATUid_a1b2c3",
-  "serviceCode": "*920*15#",
+  "serviceCode": "*920*131#",
   "phoneNumber": "+233551234567",
   "text":        "1*2*3"
 }`}

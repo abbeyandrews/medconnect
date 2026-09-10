@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth, homeFor } from '@/lib/auth';
+import { useUssdCode } from '@/lib/public-info';
 import { accentVars } from '@/lib/utils';
 
 /**
@@ -59,6 +60,7 @@ export default function LandingPage() {
 
   const signedIn = !loading && Boolean(user);
   const destination = user ? homeFor(user) : '/login';
+  const ussdCode = useUssdCode();
 
   return (
     <main className="min-h-screen bg-background">
@@ -104,6 +106,20 @@ export default function LandingPage() {
               account. Those bookings land in the same diary your front desk and doctors already work from.
             </p>
 
+            {/* The one thing a patient needs from this page. */}
+            <div className="mt-8 inline-flex flex-wrap items-center gap-x-4 gap-y-2 rounded-2xl border border-white/20 bg-white/10 px-5 py-4">
+              <Phone className="h-5 w-5 shrink-0 text-white/70" />
+              <div>
+                <p className="text-xs uppercase tracking-wide text-white/60">Patients dial</p>
+                <p className="font-mono text-2xl font-semibold tracking-wide lg:text-3xl">{ussdCode}</p>
+              </div>
+              <p className="text-xs leading-relaxed text-white/60">
+                From any phone.
+                <br />
+                No internet needed.
+              </p>
+            </div>
+
             <div className="mt-8 flex flex-wrap gap-3">
               <Button size="lg" variant="signal" asChild>
                 <Link href={destination}>
@@ -130,7 +146,7 @@ export default function LandingPage() {
             <div className="rounded-[2rem] border-[8px] border-black/25 bg-black/25 p-1 shadow-panel">
               <div className="overflow-hidden rounded-[1.5rem] bg-black/20">
                 <div className="flex items-center justify-between px-4 pb-1 pt-2.5 text-[10px] text-white/50">
-                  <span className="font-mono">*920*15#</span>
+                  <span className="font-mono">{ussdCode}</span>
                   <span className="flex items-center gap-1">
                     <Signal className="h-3 w-3" />
                     <Smartphone className="h-3 w-3 opacity-40" />
@@ -138,13 +154,11 @@ export default function LandingPage() {
                 </div>
                 <div className="ussd-screen min-h-[240px] bg-[#dff0e6] px-4 py-3 text-[13px] text-ink">
 {`Welcome to MedConnect
-
 1. Book an appointment
 2. My appointments
 3. Cancel an appointment
-4. Clinic information
-
-Reply with an option`}
+4. Reschedule
+5. Help`}
                 </div>
                 <div className="px-4 py-3 text-center text-[10px] text-white/40">Works on any handset</div>
               </div>

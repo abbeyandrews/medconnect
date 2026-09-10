@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { API_URL } from '@/lib/api';
+import { useUssdCode } from '@/lib/public-info';
 import { cn } from '@/lib/utils';
 
 /**
@@ -43,12 +44,15 @@ function parseOptions(screen: string | null) {
 }
 
 export function UssdSimulator({
-  serviceCode = '*920*15#',
+  serviceCode,
   onSessionEnd,
 }: {
+  /** Defaults to the code configured in Admin → Settings. */
   serviceCode?: string;
   onSessionEnd?: () => void;
 }) {
+  const configuredCode = useUssdCode();
+  const dialCode = serviceCode ?? configuredCode;
   const [phoneNumber, setPhoneNumber] = useState('0200000000');
   const [sessionId, setSessionId] = useState(newSessionId);
   const [accumulated, setAccumulated] = useState('');
@@ -93,7 +97,7 @@ export function UssdSimulator({
         body: JSON.stringify({
           sessionId: session,
           phoneNumber: phoneNumber || '0200000000',
-          serviceCode,
+          serviceCode: dialCode,
           text,
         }),
       });
@@ -130,7 +134,7 @@ export function UssdSimulator({
     setLive(true);
     setScreen(null);
     // A fresh dial posts an empty text, as a real gateway does.
-    send('', `Dialled ${serviceCode}`, id);
+    send('', `Dialled ${dialCode}`, id);
   }
 
   /** Sends one value. Used by the keypad options and by the Send button. */
@@ -168,7 +172,7 @@ export function UssdSimulator({
         <div className="mx-auto w-[280px] rounded-[2rem] border-[8px] border-panel-deep bg-panel-deep p-1 shadow-panel">
           <div className="overflow-hidden rounded-[1.5rem] bg-panel-deep">
             <div className="flex items-center justify-between px-4 pb-1 pt-2.5 text-[10px] text-white/60">
-              <span className="font-mono">{serviceCode}</span>
+              <span className="font-mono">{dialCode}</span>
               <span className="flex items-center gap-1">
                 <Signal className="h-3 w-3" />
                 <Wifi className="h-3 w-3 opacity-30" />
@@ -245,7 +249,7 @@ export function UssdSimulator({
             {!dialled || !live ? (
               <Button className="flex-1" onClick={dial} disabled={busy}>
                 <PhoneCall className="h-4 w-4" />
-                {dialled ? 'Dial again' : `Dial ${serviceCode}`}
+                {dialled ? 'Dial again' : `Dial ${dialCode}`}
               </Button>
             ) : (
               <Button variant="outline" className="flex-1" onClick={hangUp}>
