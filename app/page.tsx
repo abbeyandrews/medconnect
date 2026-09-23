@@ -153,10 +153,10 @@ export default function LandingPage() {
                   </span>
                 </div>
                 <div className="ussd-screen min-h-[240px] bg-[#dff0e6] px-4 py-3 text-[13px] text-ink">
-{`Welcome to MedConnect
-1. Book an appointment
+{`Welcome to MedConnect Hospital. How can we assist you today?
+1. Book appointment
 2. My appointments
-3. Cancel an appointment
+3. Cancel appointment
 4. Reschedule
 5. Help`}
                 </div>
